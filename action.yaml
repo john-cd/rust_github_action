@@ -9,6 +9,7 @@ runs:
   using: "composite"
   steps:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
     ## TODO: if cache_from type=gha does not work, use type=local in compose.yaml and trying the following:
     # - name: Create .cache directory
     #   run: mkdir -p ./.cache/
@@ -21,5 +22,7 @@ runs:
     #     restore-keys: ${{ runner.os }}-cargo-
     - name: Build the container
       run: docker compose -f compose.yaml -f compose-final.yaml build
+      shell: bash
     - name: Save the container
       run: docker save final-app | zip ${{ inputs.output-file-name }}.tar.zip -
+      shell: bash
