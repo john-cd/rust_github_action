@@ -1,1 +1,1 @@
-COPY . /app/ in dockefile
+verify that the example worflow works
