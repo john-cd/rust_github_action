@@ -31,8 +31,6 @@ ARG TARGETPLATFORM
 # Install cross compilation build dependencies.
 RUN xx-apk add --no-cache musl-dev gcc
 
-COPY . /code/
-
 # Build the application.
 # Leverage a bind mount to the src directory to avoid having to copy the
 # source code into the container. Once built, copy the executable to an
@@ -48,7 +46,7 @@ mkdir -p /code/dist/
 cp /code/target/$(xx-cargo --print-target-triple)/release/$APP_NAME /code/dist/app
 xx-verify /code/dist/app
 EOF
-## Note: using bind mounts for the folders-to-cache (target, cargo/*...) won't work even if marked `rw`
+## Note: using bind mounts for the folders-to-cache (target, cargo/*...) won't work even if marked `rw`. Writes are discarded.
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -57,7 +55,7 @@ EOF
 # stage.
 #
 # The example below uses the alpine image as the foundation for running the app.
-# By specifying the "3.18" tag, it will use version 3.18 of alpine. If
+# By specifying the "3.19" tag, it will use version 3.19 of alpine. If
 # reproducability is important, consider using a digest
 # (e.g., alpine@sha256:664888ac9cfd28068e062c991ebcff4b4c7307dc8dd4df9e728bedde5c449d91).
 FROM alpine:3.19 AS final
