@@ -78,8 +78,12 @@ docker compose -f compose.yaml -f compose-final.yaml -f compose-test.yaml up -d 
 ## Tag the repo
 
 ```bash
+git tag
 git tag -a -m "Description of this release" v1
-git push --follow-tags
+git tag
+git show v1
+git push origin v1
+# git push --follow-tags
 ```
 
 [Git Basics - Tagging]( https://git-scm.com/book/en/v2/Git-Basics-Tagging )
