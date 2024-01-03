@@ -5,7 +5,7 @@ services:
   app:
     platform: linux/amd64
     build:
-      context: .   # relative to the location of the Compose file.
+      context: .   # relative to the location of the (first) Compose file (if more than 1 are specified with -f).
       target: build
       cache_from:
         - rust:${RUST_VERSION}-alpine
