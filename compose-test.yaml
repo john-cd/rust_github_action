@@ -1,0 +1,7 @@
+## Docker Compose fragment meant to override compose.yaml 
+
+services:
+  app:
+    build:
+      context: ./test_app
+      dockerfile: ../Dockerfile # A relative path is resolved from the build context.

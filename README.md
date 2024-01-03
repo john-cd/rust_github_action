@@ -44,10 +44,18 @@ docker run -it --name test_container test_app ash
 
 ## Test the Docker Compose config
 
-`compose.yaml` uses the `build` stage. To build the Docker image using Compose, use
+`compose.yaml` uses the `build` stage.
+
+To build the Docker image using Compose, use
 
 ```bash
 docker compose build
+```
+
+To test the build stage with the provided `test_app`, use
+
+```bash
+docker compose -f compose.yaml -f compose-test.yaml build
 ```
 
 To build and run the `final` Docker image using Compose, use `compose-final.yaml`:
@@ -60,12 +68,20 @@ docker compose -f compose.yaml -f compose-final.yaml up -d
 docker compose -f compose.yaml -f compose-final.yaml up -d --build
 ```
 
+To test the final stage with the provided `test_app`, use
+
+```bash
+docker compose -f compose.yaml -f compose-final.yaml -f compose-test.yaml up -d --build
+```
+
 ## Tag the repo
 
 ```bash
 git tag -a -m "Description of this release" v1
 git push --follow-tags
 ```
+
+[Git Basics - Tagging]( https://git-scm.com/book/en/v2/Git-Basics-Tagging )
 
 The tag will be used by GitHub Action as the Action version.
 

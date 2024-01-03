@@ -10,6 +10,7 @@ runs:
   steps:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
+    ## TODO: if cache_from type=gha does not work, use type=local in compose.yaml and trying the following:
     # - name: Create .cache directory
     #   run: mkdir -p ./.cache/
     # - name: Set up cargo cache
