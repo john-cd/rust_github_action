@@ -8,8 +8,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash
+    - name: Check Runner OS
+        if: ${{ runner.os != 'Linux' }}
+        shell: bash
+        run: |
+          echo "::error title=⛔ error hint::Support Linux Only"
+          exit 1
     ## TODO: if cache_from type=gha does not work, use type=local in compose.yaml and trying the following:
     # - name: Create .cache directory
     #   run: mkdir -p ./.cache/
@@ -21,8 +25,11 @@ runs:
     #     key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     #     restore-keys: ${{ runner.os }}-cargo-
     - name: Build the container
-      run: docker compose -f compose.yaml -f compose-final.yaml build
+      run: docker compose -f ${{ github.action_path }}/compose.yaml -f ${{ github.action_path }}/compose-final.yaml build
       shell: bash
     - name: Save the container
       run: docker save final-app | zip ${{ inputs.output-file-name }}.tar.zip -
       shell: bash
+branding:
+  icon: 'package'
+  color: 'green'
