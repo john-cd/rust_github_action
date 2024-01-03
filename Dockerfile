@@ -16,7 +16,7 @@ FROM --platform=$BUILDPLATFORM tonistiigi/xx:1.3.0 AS xx
 # Create a stage for building the application.
 FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-alpine AS build
 ARG APP_NAME
-WORKDIR /app
+WORKDIR /code
 
 # Copy cross compilation utilities from the xx stage.
 COPY --from=xx / /
@@ -31,22 +31,22 @@ ARG TARGETPLATFORM
 # Install cross compilation build dependencies.
 RUN xx-apk add --no-cache musl-dev gcc
 
-COPY . /app/
+COPY . /code/
 
 # Build the application.
 # Leverage a bind mount to the src directory to avoid having to copy the
 # source code into the container. Once built, copy the executable to an
 # output directory.
-# Note: xx-cargo does not store the compiled executable under /app/target/release/
-RUN --mount=type=bind,source=src,target=/app/src \
-    --mount=type=bind,source=Cargo.toml,target=/app/Cargo.toml \
-    --mount=type=bind,source=Cargo.lock,target=/app/Cargo.lock \
+# Note: xx-cargo does not store the compiled executable under /code/target/release/
+RUN --mount=type=bind,source=src,target=/code/src \
+    --mount=type=bind,source=Cargo.toml,target=/code/Cargo.toml \
+    --mount=type=bind,source=Cargo.lock,target=/code/Cargo.lock \
     <<EOF
 set -e
-xx-cargo build --locked --release --target-dir /app/target
-mkdir -p /app/dist/
-cp /app/target/$(xx-cargo --print-target-triple)/release/$APP_NAME /app/dist/app
-xx-verify /app/dist/app
+xx-cargo build --locked --release --target-dir /code/target
+mkdir -p /code/dist/
+cp /code/target/$(xx-cargo --print-target-triple)/release/$APP_NAME /code/dist/app
+xx-verify /code/dist/app
 EOF
 ## Note: using bind mounts for the folders-to-cache (target, cargo/*...) won't work even if marked `rw`
 
@@ -76,11 +76,11 @@ RUN adduser \
 USER appuser
 
 # Copy the executable from the "build" stage.
-COPY --from=build /app/dist/app /app/dist/
+COPY --from=build /code/dist/app /code/dist/
 
 # COPY entrypoint.sh /entrypoint.sh
 
 # ENTRYPOINT ["/entrypoint.sh"]
 
 # What the container should run when it is started.
-CMD ["/app/dist/app"]
+CMD ["/code/dist/app"]
