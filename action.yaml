@@ -9,11 +9,11 @@ runs:
   using: "composite"
   steps:
     - name: Check Runner OS
-        if: ${{ runner.os != 'Linux' }}
-        shell: bash
-        run: |
-          echo "::error title=⛔ error hint::Support Linux Only"
-          exit 1
+      if: ${{ runner.os != 'Linux' }}
+      shell: bash
+      run: |
+        echo "::error title=⛔ error hint::Support Linux Only"
+        exit 1
     ## TODO: if cache_from type=gha does not work, use type=local in compose.yaml and trying the following:
     # - name: Create .cache directory
     #   run: mkdir -p ./.cache/
