@@ -1,6 +1,6 @@
 # Docker action
 
-This action builds Rust code, builds a thin Docker container with the resulting executable, then saves the image as `app.tar`.
+This action builds Rust code, builds a thin Docker container with the resulting executable, then saves the image as `app.tar.zip`.
 
 ## Inputs
 
