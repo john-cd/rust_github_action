@@ -40,12 +40,12 @@ runs:
     - name: Build the container
       run: |
         cat <<EOF
-services:
-  app:
-    build:
-      context: ${{ github.workspace }}
-      dockerfile: ${{ github.action_path }}/Dockerfile
-EOF | docker compose -f ${{ github.action_path }}/compose.yaml -f ${{ github.action_path }}/compose-final.yaml -f - build
+        services:
+          app:
+            build:
+              context: ${{ github.workspace }}
+              dockerfile: ${{ github.action_path }}/Dockerfile
+        EOF | docker compose -f ${{ github.action_path }}/compose.yaml -f ${{ github.action_path }}/compose-final.yaml -f - build
       shell: bash
     - name: Display built images (debug)
       run: docker image ls
