@@ -1,10 +1,14 @@
 name: 'Rust GitHub Action'
-description: ''
+description: 'GitHub Action that builds Rust code and creates a thin Docker image'
 inputs:
   output-file-name:  # id of input
     description: 'Name of the output file'
     required: true
     default: 'app'
+outputs:
+  output_file_path:
+    description: "Output file path"
+    value: ${{ steps.save.outputs.output_file_path }}
 runs:
   using: "composite"
   steps:
@@ -44,10 +48,10 @@ runs:
         EOF | docker compose -f ${{ github.action_path }}/compose.yaml -f ${{ github.action_path }}/compose-final.yaml -f - build
       shell: bash
     - name: Save the container
-      id:
+      id: save
       run: |
         docker save final-app | zip ${{ inputs.output-file-name }}.tar.zip -
-        echo "output_file=${{ inputs.output-file-name }}.tar.zip" >> "$GITHUB_OUTPUT"
+        echo "output_file_path=${{ github.workspace }}/${{ inputs.output-file-name }}.tar.zip" >> "$GITHUB_OUTPUT"
       shell: bash
 branding:
   icon: 'package'
