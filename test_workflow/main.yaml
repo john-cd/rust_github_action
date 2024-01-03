@@ -1,0 +1,13 @@
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A test job
+    steps:
+      - uses: actions/checkout@v4
+      - id: foo
+        uses: john-cd/rust_github_action@v1
+        #with:
+      - run: ls -la
+        shell: bash
