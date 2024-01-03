@@ -49,6 +49,7 @@ runs:
       shell: bash
     - name: Display built images (debug)
       run: docker image ls
+      shell: bash
     - name: Save the container
       id: save
       run: |
