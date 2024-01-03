@@ -26,8 +26,9 @@ The Dockerfile is a multi-stage build.
 To build the "build" Docker image, which contains the Rust tooling, use:
 
 ```bash
-cd test_app
-docker build --tag test_app --build-arg RUST_VERSION=1.75 --build-arg APP_NAME=test_app --target build --platform linux/amd64 .
+docker build --tag test_app --target build \
+  --build-arg RUST_VERSION=1.75 --build-arg APP_NAME=test_app \
+  --platform linux/amd64 --file ./Dockerfile   ./test_app
 ```
 
 Use `--target final` to build the "final" stage, which only contains the final executable.
