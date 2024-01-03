@@ -1,0 +1,9 @@
+## Docker compose file fragment
+## Use it to override compose.yaml
+name: final
+services:
+  app:
+    build:
+      target: final
+      cache_from:
+        - alpine:3.19

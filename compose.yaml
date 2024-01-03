@@ -1,13 +1,19 @@
 # Docker compose reference guide at https://docs.docker.com/go/compose-spec-reference/
 # For examples, see the Awesome Compose repository: https://github.com/docker/awesome-compose
-name: app
+name: build
 services:
   app:
+    platform: linux/amd64
     build:
       context: .   # relative to the location of the Compose file.
-      target: final
+      target: build
       cache_from:
         - rust:${RUST_VERSION}-alpine
+        #- type=local,dest=./.cache
         - type=gha
+      cache_to:
+        #- type=local,dest=./.cache
+        - type=gha,mode=max
       args:
         RUST_VERSION: ${RUST_VERSION}
+        APP_NAME: ${APP_NAME}

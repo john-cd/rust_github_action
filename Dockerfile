@@ -5,7 +5,7 @@
 # https://docs.docker.com/go/dockerfile-reference/
 
 ARG RUST_VERSION
-ARG APP_NAME=rust_github_action
+ARG APP_NAME
 
 ################################################################################
 # xx is a helper for cross-compilation.
@@ -31,20 +31,16 @@ ARG TARGETPLATFORM
 # Install cross compilation build dependencies.
 RUN xx-apk add --no-cache musl-dev gcc
 
+COPY . /app/
+
 # Build the application.
-# Leverage a cache mount to /usr/local/cargo/registry/
-# for downloaded dependencies, a cache mount to /usr/local/cargo/git/db
-# for git repository dependencies, and a cache mount to /app/target/ for
-# compiled dependencies which will speed up subsequent builds.
 # Leverage a bind mount to the src directory to avoid having to copy the
 # source code into the container. Once built, copy the executable to an
-# output directory before the cache mounted /app/target is unmounted.
+# output directory.
+# Note: xx-cargo does not store the compiled executable under /app/target/release/
 RUN --mount=type=bind,source=src,target=/app/src \
     --mount=type=bind,source=Cargo.toml,target=/app/Cargo.toml \
     --mount=type=bind,source=Cargo.lock,target=/app/Cargo.lock \
-    --mount=type=cache,source=.cache/target,target=/app/target/ \
-    --mount=type=cache,source=.cache/cargo/git/db,target=/usr/local/cargo/git/db \
-    --mount=type=cache,source=.cache/cargo/registry,target=/usr/local/cargo/registry/ \
     <<EOF
 set -e
 xx-cargo build --locked --release --target-dir /app/target
@@ -52,13 +48,7 @@ mkdir -p /app/dist/
 cp /app/target/$(xx-cargo --print-target-triple)/release/$APP_NAME /app/dist/app
 xx-verify /app/dist/app
 EOF
-
-# # Copies your code file from your action repository to the filesystem path `/` of the container
-# COPY entrypoint.sh /entrypoint.sh
-
-# # Code file to execute when the docker container starts up (`entrypoint.sh`)
-# ENTRYPOINT ["/entrypoint.sh"]
-
+## Note: using bind mounts for the folders-to-cache (target, cargo/*...) won't work even if marked `rw`
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -87,6 +77,10 @@ USER appuser
 
 # Copy the executable from the "build" stage.
 COPY --from=build /app/dist/app /app/dist/
+
+# COPY entrypoint.sh /entrypoint.sh
+
+# ENTRYPOINT ["/entrypoint.sh"]
 
 # What the container should run when it is started.
 CMD ["/app/dist/app"]
