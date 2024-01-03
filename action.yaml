@@ -6,7 +6,7 @@ inputs:
     required: true
     default: 'test_app'
   output-file-name:
-    description: 'Name of the output file'
+    description: 'Name of the output file (without extension)'
     required: true
     default: 'app'
 outputs:
