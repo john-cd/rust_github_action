@@ -1,20 +1,25 @@
 name: 'Rust GitHub Action'
 description: ''
+inputs:
+  output-file-name:  # id of input
+    description: 'Name of the output file'
+    required: true
+    default: 'app'
 runs:
   using: "composite"
   steps:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
-    - name: Create .cache directory
-      run: mkdir -p ./.cache/
-    - name: Set up cargo cache
-      uses: actions/cache@v3
-      continue-on-error: false
-      with:
-        path: ./.cache/
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: ${{ runner.os }}-cargo-
+    # - name: Create .cache directory
+    #   run: mkdir -p ./.cache/
+    # - name: Set up cargo cache
+    #   uses: actions/cache@v3
+    #   continue-on-error: false
+    #   with:
+    #     path: ./.cache/
+    #     key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    #     restore-keys: ${{ runner.os }}-cargo-
     - name: Build the container
       run: docker compose -f compose.yaml -f compose-final.yaml build
     - name: Save the container
-      run: docker save --output app.tar final-app
+      run: docker save final-app | zip ${{ inputs.output-file-name }}.tar.zip -
