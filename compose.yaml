@@ -20,5 +20,3 @@ services:
       args:
         RUST_VERSION: ${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}
         APP_NAME: ${APP_NAME:?Set APP_NAME in .devcontainer/.env or the host environment}
-
-        UID: ${UID:?Set UID in .devcontainer/.env or the host environment}
