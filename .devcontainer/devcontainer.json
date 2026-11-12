@@ -1,7 +1,8 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// rust-github-action devcontainer configuration uses a project-prefixed Compose service.
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Ubuntu",
+	"name": "rust-github-action - Ubuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
     // Features to add to the dev container. More info: https://containers.dev/features.

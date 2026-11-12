@@ -64,3 +64,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Shared non-secret Docker configuration is tracked; local credentials are ignored.
+!.devcontainer/
+!.devcontainer/.env
+.devcontainer/.env.local

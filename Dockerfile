@@ -1,4 +1,7 @@
 # syntax=docker/dockerfile:1
+# Dockerfile build inputs are required and supplied by Compose from tracked .devcontainer/.env.
+# From the repo root pass --env-file .devcontainer/.env and add --env-file .devcontainer/.env.local when present.
+# Dockerfile build inputs for rust-github-action.
 
 # Comments are provided throughout this file to help you get started.
 # If you need more help, visit the Dockerfile reference guide at
@@ -62,7 +65,7 @@ FROM alpine:3.19 AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
+ARG UID
 RUN adduser \
     --disabled-password \
     --gecos "" \

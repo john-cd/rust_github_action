@@ -1,9 +1,16 @@
+# Project-scoped Compose stack: rust-github-action-final.
+# Build inputs come from tracked .devcontainer/.env; from the repo root pass --env-file .devcontainer/.env.
+# Keep credentials in ignored .devcontainer/.env.local; from the repo root pass it as a second --env-file when present.
 ## Docker compose file fragment
 ## Use it to override compose.yaml
-name: final
+name: rust-github-action-final
 services:
-  app:
+  rust-github-action-app:
     build:
       target: final
+      args:
+        APP_NAME: ${APP_NAME:?Set APP_NAME in .devcontainer/.env or the host environment}
+        RUST_VERSION: ${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}
+        UID: ${UID:?Set UID in .devcontainer/.env or the host environment}
       cache_from:
         - alpine:3.19
