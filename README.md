@@ -1,4 +1,4 @@
-# Docker action
+﻿# Docker action
 
 This action builds Rust code, builds a thin Docker container with the resulting executable, then saves the image as `<output-file-name>.tar.zip`.
 
@@ -85,23 +85,23 @@ docker compose build
 To test the build stage with the provided `test_app`, use
 
 ```bash
-docker compose -f compose.yaml -f compose-test.yaml build
+docker compose -f compose.yaml -f compose.test.yaml build
 ```
 
-To build and run the `final` Docker image using Compose, use `compose-final.yaml`:
+To build and run the `final` Docker image using Compose, use `compose.final.yaml`:
 
 ```bash
-docker compose -f compose.yaml -f compose-final.yaml build
-docker compose -f compose.yaml -f compose-final.yaml up -d
+docker compose -f compose.yaml -f compose.final.yaml build
+docker compose -f compose.yaml -f compose.final.yaml up -d
 
 # or simply
-docker compose -f compose.yaml -f compose-final.yaml up -d --build
+docker compose -f compose.yaml -f compose.final.yaml up -d --build
 ```
 
 To test the final stage with the provided `test_app`, use
 
 ```bash
-docker compose -f compose.yaml -f compose-final.yaml -f compose-test.yaml up -d --build
+docker compose -f compose.yaml -f compose.final.yaml -f compose.test.yaml up -d --build
 ```
 
 ## References
