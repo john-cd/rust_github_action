@@ -1,7 +1,7 @@
 # Project-scoped Compose stack: rust-github-action-test.
 # Build inputs come from tracked .devcontainer/.env; from the repo root pass --env-file .devcontainer/.env.
 # Keep credentials in ignored .devcontainer/.env.local; from the repo root pass it as a second --env-file when present.
-## Docker Compose fragment meant to override compose.yaml 
+## Docker Compose fragment meant to override compose.yaml
 
 name: rust-github-action-test
 services:
