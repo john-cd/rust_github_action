@@ -11,7 +11,8 @@ services:
       context: .   # relative to the location of the (first) Compose file (if more than 1 are specified with -f).
       target: build
       cache_from:
-        - rust:${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}-alpine
+        - rust:${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}-alpine${RUST_ALPINE_VERSION:?Set RUST_ALPINE_VERSION in .devcontainer/.env or the host environment}
+        - alpine:${ALPINE_VERSION:?Set ALPINE_VERSION in .devcontainer/.env or the host environment}
         #- type=local,dest=./.cache
         - type=gha
       cache_to:
@@ -19,4 +20,7 @@ services:
         - type=gha,mode=max
       args:
         RUST_VERSION: ${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}
+        RUST_ALPINE_VERSION: ${RUST_ALPINE_VERSION:?Set RUST_ALPINE_VERSION in .devcontainer/.env or the host environment}
+        ALPINE_VERSION: ${ALPINE_VERSION:?Set ALPINE_VERSION in .devcontainer/.env or the host environment}
+        XX_VERSION: ${XX_VERSION:?Set XX_VERSION in .devcontainer/.env or the host environment}
         APP_NAME: ${APP_NAME:?Set APP_NAME in .devcontainer/.env or the host environment}

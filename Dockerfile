@@ -8,16 +8,19 @@
 # https://docs.docker.com/go/dockerfile-reference/
 
 ARG RUST_VERSION
+ARG RUST_ALPINE_VERSION
+ARG ALPINE_VERSION
+ARG XX_VERSION
 ARG APP_NAME
 
 ################################################################################
 # xx is a helper for cross-compilation.
 # See https://github.com/tonistiigi/xx/ for more information.
-FROM --platform=$BUILDPLATFORM tonistiigi/xx:1.3.0 AS xx
+FROM --platform=$BUILDPLATFORM tonistiigi/xx:${XX_VERSION} AS xx
 
 ################################################################################
 # Create a stage for building the application.
-FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-alpine AS build
+FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-alpine${RUST_ALPINE_VERSION} AS build
 ARG APP_NAME
 WORKDIR /code
 
@@ -57,11 +60,8 @@ EOF
 # image from the build stage where the necessary files are copied from the build
 # stage.
 #
-# The example below uses the alpine image as the foundation for running the app.
-# By specifying the "3.19" tag, it will use version 3.19 of alpine. If
-# reproducability is important, consider using a digest
-# (e.g., alpine@sha256:664888ac9cfd28068e062c991ebcff4b4c7307dc8dd4df9e728bedde5c449d91).
-FROM alpine:3.19 AS final
+# Pin the runtime image to the Alpine patch release selected in .devcontainer/.env.
+FROM alpine:${ALPINE_VERSION} AS final
 
 # Create the fixed non-privileged account that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

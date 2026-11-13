@@ -4,14 +4,15 @@
 {
 	"name": "rust-github-action - Ubuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
     // Features to add to the dev container. More info: https://containers.dev/features.
     // "features": {},
 	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.2": {
 			"moby": true,
 			"installDockerBuildx": true,
-			"version": "latest",
+			"version": "29.9.3",
+			"mobyBuildxVersion": "0.39.0",
 			"dockerDashComposeVersion": "v2"
 		}
 	}

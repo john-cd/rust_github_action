@@ -40,15 +40,26 @@ runs:
     #     restore-keys: ${{ runner.os }}-cargo-
     #
     - name: Build the container
+      env:
+        ACTION_APP_NAME: ${{ inputs.app-name }}
       run: |
+        set -euo pipefail
+        app_name="$ACTION_APP_NAME"
+        set -a
+        source "${{ github.action_path }}/.devcontainer/.env"
+        set +a
         docker build --target final --tag final-app \
-          --build-arg RUST_VERSION=1.75 --build-arg APP_NAME=${{ inputs.app-name }} \
+          --build-arg "RUST_VERSION=${RUST_VERSION}" \
+          --build-arg "RUST_ALPINE_VERSION=${RUST_ALPINE_VERSION}" \
+          --build-arg "ALPINE_VERSION=${ALPINE_VERSION}" \
+          --build-arg "XX_VERSION=${XX_VERSION}" \
+          --build-arg "APP_NAME=${app_name}" \
           --platform linux/amd64 \
-          --cache-from "rust:1.75-alpine" \
-          --cache-from "alpine:3.19" \
+          --cache-from "rust:${RUST_VERSION}-alpine${RUST_ALPINE_VERSION}" \
+          --cache-from "alpine:${ALPINE_VERSION}" \
           --cache-from "type=gha" \
           --cache-to "type=gha,mode=max" \
-          --file ${{ github.action_path }}/Dockerfile   ${{ github.workspace }}
+          --file "${{ github.action_path }}/Dockerfile" "${{ github.workspace }}"
       shell: bash
     - name: Display built images (debug)
       run: docker image ls
