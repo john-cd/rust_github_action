@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-action:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+
+      - name: Build and package sample app
+        id: build-action
+        uses: ./
+        with:
+          app-name: test_app
+          output-file-name: smoke-test
+
+      - name: Load the saved image and run it
+        env:
+          ACTION_OUTPUT_FILE_PATH: ${{ steps.build-action.outputs.output_file_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_path="${GITHUB_WORKSPACE}/smoke-test.tar.zip"
+          if [[ "${ACTION_OUTPUT_FILE_PATH}" != "${expected_path}" ]]; then
+            echo "Unexpected archive path: ${ACTION_OUTPUT_FILE_PATH}" >&2
+            exit 1
+          fi
+          test -s "${ACTION_OUTPUT_FILE_PATH}"
+          unzip -p "${ACTION_OUTPUT_FILE_PATH}" - | docker load
+          output="$(docker run --rm final-app)"
+          test "${output}" = "Hello, world!"
