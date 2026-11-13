@@ -11,7 +11,7 @@ if ($slot -notmatch '^(main|[a-z])$') { throw "Invalid checkout slot: $slot" }
 
 $repoName = Split-Path -Leaf $mainRepo
 $targetRoot = if ($env:CODE_TARGET_ROOT) { $env:CODE_TARGET_ROOT } else { 'D:\target' }
-$buildRoot = if ($env:CODE_BUILD_ROOT) { $env:CODE_BUILD_ROOT } else { 'C:\code_build' }
+$buildRoot = if ($env:CODE_BUILD_ROOT) { $env:CODE_BUILD_ROOT } else { 'D:\code_build' }
 $targetOutput = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } elseif ($env:CARGO_BUILD_TARGET_DIR) { $env:CARGO_BUILD_TARGET_DIR } else { Join-Path (Join-Path $targetRoot $repoName) $slot }
 $buildOutput = if ($env:CARGO_BUILD_BUILD_DIR) { $env:CARGO_BUILD_BUILD_DIR } else { Join-Path (Join-Path $buildRoot $repoName) $slot }
 $outputs = [ordered]@{

@@ -11,7 +11,7 @@ repo_name := file_name(repo_root)
 tooling_slot := if worktree_name =~ '^(main|[a-z])$' { worktree_name } else { error("Invalid worktree slot: " + worktree_name) }
 cache_home := if os() == "windows" { env("LOCALAPPDATA", join(home_directory(), ".cache")) } else { env("XDG_CACHE_HOME", join(home_directory(), ".cache")) }
 code_target_root := env("CODE_TARGET_ROOT", if os_family() == "windows" { "D:/target" } else { join(cache_home, "cargo-target") })
-code_build_root := env("CODE_BUILD_ROOT", if os_family() == "windows" { "C:/code_build" } else { join(cache_home, "cargo-build") })
+code_build_root := env("CODE_BUILD_ROOT", if os_family() == "windows" { "D:/code_build" } else { join(cache_home, "cargo-build") })
 code_sccache_root := env("CODE_SCCACHE_ROOT", env("SCCACHE_DIR", if os_family() == "windows" { "D:/sccache" } else { join(cache_home, "sccache") }))
 target_dir := join(code_target_root, repo_name, tooling_slot)
 cargo_build_target_dir := target_dir
