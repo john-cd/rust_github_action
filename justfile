@@ -3,6 +3,10 @@ set shell := ["bash", "-uc"]
 set windows-shell := ["C:/Program Files/Git/bin/bash.exe", "-uc"]
 set quiet
 
+export CARGO_TERM_QUIET := env("CARGO_TERM_QUIET", "true")
+rustfmt_toolchain := env("RUSTFMT_TOOLCHAIN", "nightly-2026-11-11")
+export RUSTFMT_TOOLCHAIN := rustfmt_toolchain
+
 root := replace(source_directory(), "\\", "/")
 checkout_name := file_name(root)
 worktree_name := if file_name(parent_directory(root)) == ".worktrees" { checkout_name } else { "main" }
@@ -49,7 +53,9 @@ export SCCACHE_BASEDIRS := sccache_basedirs
 
 [positional-arguments]
 cargo *args:
+    @printf '[cargo] start: %s\n' "$*"
     cargo "$@"
+    @printf '[cargo] done: %s\n' "$*"
 
 # Print the selected checkout slot and effective compiler-cache paths.
 build-env:
@@ -61,6 +67,8 @@ build-env:
     @printf 'CARGO_TARGET_DIR=%s\n' {{quote(target_dir)}}
     @printf 'CARGO_BUILD_TARGET_DIR=%s\n' {{quote(cargo_build_target_dir)}}
     @printf 'CARGO_BUILD_BUILD_DIR=%s\n' {{quote(build_dir)}}
+    @printf 'CARGO_TERM_QUIET=%s\n' {{quote(CARGO_TERM_QUIET)}}
+    @printf 'RUSTFMT_TOOLCHAIN=%s\n' {{quote(RUSTFMT_TOOLCHAIN)}}
     @printf 'RUSTC_WRAPPER=%s\n' {{quote(RUSTC_WRAPPER)}}
     @printf 'CARGO_BUILD_RUSTC_WRAPPER=%s\n' {{quote(CARGO_BUILD_RUSTC_WRAPPER)}}
     @printf 'CARGO_INCREMENTAL=%s\n' {{quote(CARGO_INCREMENTAL)}}
