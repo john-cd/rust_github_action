@@ -2,5 +2,8 @@
 
 ## Repository review (2026-11-12)
 
-- [ ] **P1 — Modernize the action's Rust and Alpine images and validate its artifact (medium).**
-  `action.yaml` builds with Rust 1.75, the Dockerfile uses Alpine 3.19 and `tonistiigi/xx:1.3.0`, and the sample workflow references a mutable branch. Define the minimum supported Rust version, pin compatible maintained image releases, and validate a locked build, container startup, and the reported zip path on Linux. Treat action inputs as data via environment variables and quote or validate them before use in shell steps.
+- [x] **P1 — Refresh image pins and harden action inputs (medium).**
+  The builder now uses Rust 1.100.0, Alpine 3.24.4, and `tonistiigi/xx` 1.10.0. The sample workflow runs the local action and uses current `actions/checkout`; `app-name` and `output-file-name` are passed through environment variables and validated before shell or path use.
+
+- [ ] **P1 — Validate the action artifact on Linux (medium).**
+  Run the locked Docker build, start the final container, and verify that the action reports an existing `<output-file-name>.tar.zip` in the workspace. Docker Desktop's Linux daemon is unavailable in this environment; `docker info` cannot connect to `npipe:////./pipe/dockerDesktopLinuxEngine`, so container and archive behavior remain unverified.

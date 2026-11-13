@@ -42,11 +42,16 @@ runs:
     - name: Build the container
       env:
         ACTION_APP_NAME: ${{ inputs.app-name }}
+        ACTION_PATH: ${{ github.action_path }}
       run: |
         set -euo pipefail
         app_name="$ACTION_APP_NAME"
+        if [[ ! "$app_name" =~ ^[A-Za-z0-9_][A-Za-z0-9_-]*$ ]]; then
+          echo "::error title=Invalid app-name::Use only ASCII letters, digits, underscores, and hyphens." >&2
+          exit 1
+        fi
         set -a
-        source "${{ github.action_path }}/.devcontainer/.env"
+        source "$ACTION_PATH/.devcontainer/.env"
         set +a
         docker build --target final --tag final-app \
           --build-arg "RUST_VERSION=${RUST_VERSION}" \
@@ -59,16 +64,25 @@ runs:
           --cache-from "alpine:${ALPINE_VERSION}" \
           --cache-from "type=gha" \
           --cache-to "type=gha,mode=max" \
-          --file "${{ github.action_path }}/Dockerfile" "${{ github.workspace }}"
+          --file "$ACTION_PATH/Dockerfile" "$GITHUB_WORKSPACE"
       shell: bash
     - name: Display built images (debug)
       run: docker image ls
       shell: bash
     - name: Save the container
       id: save
+      env:
+        ACTION_OUTPUT_FILE_NAME: ${{ inputs.output-file-name }}
       run: |
-        docker save final-app | zip ${{ inputs.output-file-name }}.tar.zip -
-        echo "output_file_path=${{ github.workspace }}/${{ inputs.output-file-name }}.tar.zip" >> "$GITHUB_OUTPUT"
+        set -euo pipefail
+        output_file_name="$ACTION_OUTPUT_FILE_NAME"
+        if [[ ! "$output_file_name" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+          echo "::error title=Invalid output-file-name::Use only ASCII letters, digits, dots, underscores, and hyphens; start with a letter or digit." >&2
+          exit 1
+        fi
+        archive_path="$GITHUB_WORKSPACE/${output_file_name}.tar.zip"
+        docker save final-app | zip "$archive_path" -
+        printf 'output_file_path=%s\n' "$archive_path" >> "$GITHUB_OUTPUT"
       shell: bash
 branding:
   icon: 'package'

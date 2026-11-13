@@ -47,9 +47,13 @@ RUN --mount=type=bind,source=src,target=/code/src \
     --mount=type=bind,source=Cargo.lock,target=/code/Cargo.lock \
     <<EOF
 set -e
+if ! printf '%s\n' "$APP_NAME" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_-]*$'; then
+    echo "APP_NAME must contain only ASCII letters, digits, underscores, and hyphens." >&2
+    exit 1
+fi
 xx-cargo build --locked --release --target-dir /code/target
 mkdir -p /code/dist/
-cp /code/target/$(xx-cargo --print-target-triple)/release/$APP_NAME /code/dist/app
+cp "/code/target/$(xx-cargo --print-target-triple)/release/$APP_NAME" /code/dist/app
 xx-verify /code/dist/app
 EOF
 ## Note: using bind mounts for the folders-to-cache (target, cargo/*...) won't work even if marked `rw`. Writes are discarded.
