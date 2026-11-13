@@ -33,8 +33,16 @@ The Dockerfile is a multi-stage build.
 To build the "build" Docker image, which contains the Rust tooling, use the following from the root directory:
 
 ```bash
+set -a
+source .devcontainer/.env
+set +a
+
 docker build --tag test_app --target build \
-  --build-arg RUST_VERSION=1.75 --build-arg APP_NAME=test_app \
+  --build-arg "RUST_VERSION=${RUST_VERSION}" \
+  --build-arg "RUST_ALPINE_VERSION=${RUST_ALPINE_VERSION}" \
+  --build-arg "ALPINE_VERSION=${ALPINE_VERSION}" \
+  --build-arg "XX_VERSION=${XX_VERSION}" \
+  --build-arg "APP_NAME=test_app" \
   --platform linux/amd64 --file ./Dockerfile   ./test_app
 ```
 
