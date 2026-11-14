@@ -3,7 +3,6 @@
 //!
 //! TODO Reviewed ??-??-2026.
 
-/// Runs the application entry point.
 fn main() {
     println!("Hello, world!");
 }
