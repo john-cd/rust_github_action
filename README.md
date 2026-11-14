@@ -4,6 +4,10 @@
 
 This action builds Rust code, builds a thin Docker container with the resulting executable, then saves the image as `<output-file-name>.tar.zip`.
 
+## Local Rust checks
+
+Install the toolchain from `rust-toolchain.toml` with `rustup show` in the checkout. Run `cargo check --locked --all-targets` and `cargo test --locked` from `test_app`. Use the Docker-based action workflow to check the action itself.
+
 ## Inputs
 
 - app-name: App name (from Cargo.toml)
