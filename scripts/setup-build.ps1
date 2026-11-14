@@ -1,3 +1,5 @@
+# TODO Reviewed ??-??-2026.
+
 $ErrorActionPreference = 'Stop'
 if (-not $IsWindows) { throw 'This setup task is for Windows checkouts.' }
 

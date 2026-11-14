@@ -1,3 +1,5 @@
+# TODO Reviewed ??-??-2026.
+
 name: 'Rust GitHub Action'
 description: 'GitHub Action that builds Rust code and creates a thin Docker image'
 inputs:
