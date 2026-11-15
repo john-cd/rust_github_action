@@ -81,3 +81,21 @@ build-env:
 [windows]
 build-setup:
     pwsh.exe -NoLogo -NoProfile -File "{{root}}/scripts/setup-build.ps1"
+
+# Standard Cargo tasks for the package used by this repository's action examples.
+check:
+    cargo check --manifest-path test_app/Cargo.toml --all-targets --all-features --locked
+
+lint:
+    cargo clippy --manifest-path test_app/Cargo.toml --all-targets --all-features --locked -- -D warnings
+
+build:
+    cargo build --manifest-path test_app/Cargo.toml --all-targets --all-features --locked
+
+test:
+    cargo test --manifest-path test_app/Cargo.toml --all-targets --all-features --locked
+
+alias c := check
+alias l := lint
+alias b := build
+alias t := test
