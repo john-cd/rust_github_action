@@ -2,6 +2,6 @@
 
 # TODO Reviewed ??-??-2026.
 
-# Do not remove.
-# This is what will cause the dockerfile CMD to run.
+# Replace the wrapper with the container command so it receives signals and
+# its exit status becomes the action's exit status.
 exec "$@"

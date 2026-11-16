@@ -1,8 +1,8 @@
-//! Starts the src application and connects its top-level components.
-//! The executable uses this module to initialize services and hand control to the application.
+//! Minimal executable used to exercise the Rust GitHub Action.
 //!
 //! TODO Reviewed ??-??-2026.
 
+/// Prints a fixed greeting for the action's sample application.
 fn main() {
     println!("Hello, world!");
 }

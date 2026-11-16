@@ -1,8 +1,20 @@
 # TODO Reviewed ??-??-2026.
 
+<#
+.SYNOPSIS
+Links a Windows checkout's Cargo output directories to its external build slot.
+
+.DESCRIPTION
+Cargo output overrides take priority over the shared roots. The script reuses
+matching junctions and stops if a local path points elsewhere so existing build
+data is preserved.
+#>
+
 $ErrorActionPreference = 'Stop'
 if (-not $IsWindows) { throw 'This setup task is for Windows checkouts.' }
 
+# Resolve the primary checkout first so all worktrees share a repository name
+# but write into separate build and target slots.
 $checkout = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $checkoutName = Split-Path -Leaf $checkout
 $parent = Split-Path -Parent $checkout
