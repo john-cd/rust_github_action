@@ -18,3 +18,9 @@ hooks = [
   { id = "mixed-line-ending", args = ["--fix=lf"] },
   { id = "trailing-whitespace", args = ["--markdown-linebreak-ext=md"] },
 ]
+
+[[repos]]
+repo = "local"
+hooks = [
+  { id = "rust-format", name = "Format Rust", entry = "cargo +nightly-2026-11-11 fmt --all --manifest-path test_app/Cargo.toml", language = "system", types = ["rust"], pass_filenames = false },
+]
