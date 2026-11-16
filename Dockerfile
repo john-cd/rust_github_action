@@ -44,16 +44,18 @@ RUN xx-apk add --no-cache musl-dev gcc
 # source code into the container. Once built, copy the executable to an
 # output directory.
 # Note: xx-cargo does not store the compiled executable under /code/target/release/
-RUN --mount=type=bind,source=src,target=/code/src \
-    --mount=type=bind,source=Cargo.toml,target=/code/Cargo.toml \
-    --mount=type=bind,source=Cargo.lock,target=/code/Cargo.lock \
+RUN --mount=type=bind,target=/source \
     <<EOF
 set -e
 if ! printf '%s\n' "$APP_NAME" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_-]*$'; then
     echo "APP_NAME must contain only ASCII letters, digits, underscores, and hyphens." >&2
     exit 1
 fi
-xx-cargo build --locked --release --target-dir /code/target
+if [ -f /source/Cargo.lock ]; then
+    RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER= xx-cargo build --manifest-path /source/Cargo.toml --locked --release --target-dir /code/target
+else
+    RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER= xx-cargo build --manifest-path /source/Cargo.toml --release --target-dir /code/target
+fi
 mkdir -p /code/dist/
 cp "/code/target/$(xx-cargo --print-target-triple)/release/$APP_NAME" /code/dist/app
 xx-verify /code/dist/app
