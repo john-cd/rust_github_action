@@ -20,7 +20,8 @@ jobs:
       - name: Create a Docker image from the code
         id: create_docker_image
         uses: ./
-        #with:
+        with:
+          project-path: test_app
       - name: Output file path
         env:
           ACTION_OUTPUT_FILE_PATH: ${{ steps.create_docker_image.outputs.output_file_path }}

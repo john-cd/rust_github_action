@@ -7,6 +7,10 @@ inputs:
     description: 'App name (from Cargo.toml)'
     required: true
     default: 'test_app'
+  project-path:
+    description: 'Path to the Cargo project, relative to the checked-out repository root'
+    required: true
+    default: '.'
   output-file-name:
     description: 'Name of the output file (without extension)'
     required: true
@@ -44,12 +48,34 @@ runs:
     - name: Build the container
       env:
         ACTION_APP_NAME: ${{ inputs.app-name }}
+        ACTION_PROJECT_PATH: ${{ inputs.project-path }}
         ACTION_PATH: ${{ github.action_path }}
       run: |
         set -euo pipefail
         app_name="$ACTION_APP_NAME"
         if [[ ! "$app_name" =~ ^[A-Za-z0-9_][A-Za-z0-9_-]*$ ]]; then
           echo "::error title=Invalid app-name::Use only ASCII letters, digits, underscores, and hyphens." >&2
+          exit 1
+        fi
+        project_path="$ACTION_PROJECT_PATH"
+        workspace_path="$(realpath -e -- "$GITHUB_WORKSPACE")"
+        if [[ "$project_path" = /* ]]; then
+          echo "::error title=Invalid project-path::Use a relative Cargo project path within the checked-out repository." >&2
+          exit 1
+        fi
+        if ! source_path="$(realpath -e -- "$workspace_path/$project_path")"; then
+          echo "::error title=Invalid project-path::The project directory does not exist within the checked-out repository." >&2
+          exit 1
+        fi
+        case "$source_path" in
+          "$workspace_path"|"$workspace_path"/*) ;;
+          *)
+            echo "::error title=Invalid project-path::Use a Cargo project directory within the checked-out repository." >&2
+            exit 1
+            ;;
+        esac
+        if [[ ! -f "$source_path/Cargo.toml" ]]; then
+          echo "::error title=Invalid project-path::The selected project directory must contain Cargo.toml." >&2
           exit 1
         fi
         set -a
@@ -66,7 +92,7 @@ runs:
           --cache-from "alpine:${ALPINE_VERSION}" \
           --cache-from "type=gha" \
           --cache-to "type=gha,mode=max" \
-          --file "$ACTION_PATH/Dockerfile" "$GITHUB_WORKSPACE"
+          --file "$ACTION_PATH/Dockerfile" "$source_path"
       shell: bash
     - name: Display built images (debug)
       run: docker image ls

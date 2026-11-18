@@ -30,7 +30,21 @@ jobs:
         uses: ./
         with:
           app-name: test_app
+          project-path: test_app
           output-file-name: smoke-test
+
+      - name: Reject project paths outside the workspace
+        id: reject-escaping-project-path
+        continue-on-error: true
+        uses: ./
+        with:
+          app-name: test_app
+          project-path: ../outside
+
+      - name: Verify project-path validation
+        if: steps.reject-escaping-project-path.outcome != 'failure'
+        run: exit 1
+        shell: bash
 
       - name: Load the saved image and run it
         env:
