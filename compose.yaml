@@ -15,11 +15,6 @@ services:
       cache_from:
         - rust:${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}-alpine${RUST_ALPINE_VERSION:?Set RUST_ALPINE_VERSION in .devcontainer/.env or the host environment}
         - alpine:${ALPINE_VERSION:?Set ALPINE_VERSION in .devcontainer/.env or the host environment}
-        #- type=local,dest=./.cache
-        - type=gha
-      cache_to:
-        #- type=local,dest=./.cache
-        - type=gha,mode=max
       args:
         RUST_VERSION: ${RUST_VERSION:?Set RUST_VERSION in .devcontainer/.env or the host environment}
         RUST_ALPINE_VERSION: ${RUST_ALPINE_VERSION:?Set RUST_ALPINE_VERSION in .devcontainer/.env or the host environment}

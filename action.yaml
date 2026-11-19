@@ -34,17 +34,6 @@ runs:
     #     echo "Workspace = ${{ github.workspace }}"
     #     echo "Action path = ${{ github.action_path }}"
     #   shell: bash
-    ## TODO: if cache_from type=gha does not work, use type=local in compose.yaml and trying the following:
-    # - name: Create .cache directory
-    #   run: mkdir -p ./.cache/
-    # - name: Set up cargo cache
-    #   uses: actions/cache@v3
-    #   continue-on-error: false
-    #   with:
-    #     path: ./.cache/
-    #     key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    #     restore-keys: ${{ runner.os }}-cargo-
-    #
     - name: Build the container
       env:
         ACTION_APP_NAME: ${{ inputs.app-name }}
@@ -90,8 +79,8 @@ runs:
           --platform linux/amd64 \
           --cache-from "rust:${RUST_VERSION}-alpine${RUST_ALPINE_VERSION}" \
           --cache-from "alpine:${ALPINE_VERSION}" \
-          --cache-from "type=gha" \
-          --cache-to "type=gha,mode=max" \
+          --cache-from "type=gha,scope=rust-github-action" \
+          --cache-to "type=gha,mode=max,scope=rust-github-action,ignore-error=true" \
           --file "$ACTION_PATH/Dockerfile" "$source_path"
       shell: bash
     - name: Display built images (debug)
