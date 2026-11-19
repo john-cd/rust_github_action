@@ -1,6 +1,7 @@
 # TODO Reviewed ??-??-2026.
 
 [package]
+license-file = "../LICENSE"
 rust-version = "1.98.1"
 name = "test_app"
 version = "0.1.0"
