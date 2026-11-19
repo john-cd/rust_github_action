@@ -2,11 +2,15 @@
 
 # Docker action
 
-This action builds Rust code, builds a thin Docker container with the resulting executable, then saves the image as `<output-file-name>.tar.zip`.
+This action builds Rust code, builds a thin Docker container with the resulting
+executable, then saves the image as `<output-file-name>.tar.zip`.
 
 ## Local Rust checks
 
-Install the toolchain from `rust-toolchain.toml` with `rustup show` in the checkout. Run `cargo check --locked --all-targets` and `cargo test --locked` from `test_app`. Use the Docker-based action workflow to check the action itself.
+Install the toolchain from `rust-toolchain.toml` with `rustup show` in the
+checkout. Run `cargo check --locked --all-targets` and `cargo test --locked`
+from `test_app`. Use the Docker-based action workflow to check the action
+itself.
 
 ## Inputs
 
@@ -15,7 +19,8 @@ Install the toolchain from `rust-toolchain.toml` with `rustup show` in the check
 
 Refer to `action.yaml` for details.
 
-The action assumes the presence of `Cargo.toml`, `Cargo.lock` and a `src` folder contains Rust code.
+The action assumes the presence of `Cargo.toml`, `Cargo.lock` and a `src` folder
+contains Rust code.
 
 ## Outputs
 
@@ -36,7 +41,8 @@ An example workflow is found in `./test_workflow/`.
 
 The Dockerfile is a multi-stage build.
 
-To build the "build" Docker image, which contains the Rust tooling, use the following from the root directory:
+To build the "build" Docker image, which contains the Rust tooling, use the
+following from the root directory:
 
 ```bash
 set -a
@@ -52,7 +58,8 @@ docker build --tag test_app --target build \
   --platform linux/amd64 --file ./Dockerfile   ./test_app
 ```
 
-Substitute `--target final` to build the "final" stage, which only contains the final executable.
+Substitute `--target final` to build the "final" stage, which only contains the
+final executable.
 
 Run the Docker image and exec into it to inspect it.
 
@@ -66,8 +73,9 @@ docker run -it --name test_container test_app ash
 
 ## Create a new version of the GitHub Action
 
-Create a tag, push it to the remote origin. The tag will be used by GitHub Action as the Action version.
-Then update the version in your workflows e.g. `john-cd/rust_github_action@v2`
+Create a tag, push it to the remote origin. The tag will be used by GitHub
+Action as the Action version. Then update the version in your workflows e.g.
+`john-cd/rust_github_action@v2`
 
 ```bash
 # List existing tags
@@ -82,11 +90,12 @@ git push origin v2
 # git push --follow-tags
 ```
 
-[Git Basics - Tagging]( https://git-scm.com/book/en/v2/Git-Basics-Tagging )
+[Git Basics - Tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 
 ## Docker Compose config
 
-`Docker Compose` configuration is also provided, but it is not used by the GitHub Action itself.
+`Docker Compose` configuration is also provided, but it is not used by the
+GitHub Action itself.
 
 `compose.yaml` uses the `build` stage.
 
@@ -99,27 +108,30 @@ docker compose build
 To test the build stage with the provided `test_app`, use
 
 ```bash
-docker compose -f compose.yaml -f compose.test.yaml build
+`-f compose.test.yaml build
 ```
 
-To build and run the `final` Docker image using Compose, use `compose.final.yaml`:
+To build and run the `final` Docker image using Compose, use
+`compose.final.yaml`:
 
 ```bash
-docker compose -f compose.yaml -f compose.final.yaml build
-docker compose -f compose.yaml -f compose.final.yaml up -d
+`-f compose.final.yaml build
+`-f compose.final.yaml up -d
 
 # or simply
-docker compose -f compose.yaml -f compose.final.yaml up -d --build
+`-f compose.final.yaml up -d --build
 ```
 
 To test the final stage with the provided `test_app`, use
 
 ```bash
-docker compose -f compose.yaml -f compose.final.yaml -f compose.test.yaml up -d --build
+``
+  -f compose.final.yaml `
+  -f compose.test.yaml up -d --build
 ```
 
 ## References
 
-* [Creating a composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
-* [Creating a Docker container action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action)
-* [Docker's Rust guide](https://docs.docker.com/language/rust/)
+- [Creating a composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
+- [Creating a Docker container action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action)
+- [Docker's Rust guide](https://docs.docker.com/language/rust/)
