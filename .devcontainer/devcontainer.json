@@ -13,7 +13,7 @@
             // Debian Trixie no longer provides the Moby packages expected by this feature.
             "moby": false,
             "installDockerBuildx": true,
-            "version": "29.9.3",
+            "version": "29.10.0",
             "mobyBuildxVersion": "0.39.0",
             "dockerDashComposeVersion": "v2"
         }
